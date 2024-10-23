@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookSphere - Clone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            padding: 15px;
+            color: white;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .navbar .links a {
+            color: white;
+            margin-left: 20px;
+            text-decoration: none;
+            font-size: 1.1em;
+        }
+
+        .navbar .search-bar {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar input[type="text"] {
+            padding: 5px;
+            font-size: 1em;
+        }
+
+        .navbar button {
+            padding: 5px 10px;
+            background-color: #ff9900;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px; 
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            display: flex;
+            justify-content: space-between;
+            background-color: #fff;
+            padding: 40px 20px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-section .feature-box {
+            width: 30%;
+            background-color: #f4f4f4;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-section h2 {
+            margin: 0 0 10px 0;
+        }
+
+        /* Books Section */
+        .section-title {
+            padding: 20px;
+            font-size: 1.5em;
+            background-color: #333;
+            color: white;
+            text-align: left;
+        }
+
+        .book-section {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        .book {
+            width: 18%;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+        }
+
+        .book img {
+            width: 100px;
+            height: 150px;
+            margin-bottom: 10px;
+        }
+
+        .book button {
+            padding: 5px;
+            width: 100%;
+            background-color: #ff9900;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Footer Section */
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .footer .stats {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .footer .stat-box {
+            text-align: center;
+        }
+
+        .footer .stat-box h3 {
+            margin: 0;
+            font-size: 1.5em ;
+        }
+
+        .footer .stat-box p {
+            margin: 5px 0 0 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <h1>BookSphere</h1>
+        </div>
+        <div class="links">
+            <a href="#">My Books</a>
+            <a href="#">Browse</a>
+            <a href="#">Trending</a>
+            <a href="#">Categories</a>
+            <a href="#" id="loginBtn">Login</a>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search books..." onkeyup="searchBooks()">
+            <button onclick="searchBooks()">Search</button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Login</h2>
+            <form>
+                <label for="username">Username:</label><br>
+                <input type="text" id="username" name="username"><br>
+                <label for="password">Password:</label><br>
+                <input type="password" id="password" name="password"><br><br>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Trending Books Section -->
+    <div class="section-title">Trending Books</div>
+    <section class="book-section" id="bookList">
+        <div class="book" data-title="We Solve Murders " onclick="showContent('We Solve Murders ', 'Now you are reading  We Solve Murders .')">
+            <img src="https://images4.penguinrandomhouse.com/cover/9780593653227" alt="Trending Book 1">
+            <p>We Solve Murders </p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title="Counting Miracles " onclick="showContent('Counting Miracles', 'Now you are reading Counting Miracles.')">
+            <img src="https://images2.penguinrandomhouse.com/cover/9780593449592" alt="Trending Book 2">
+            <p>Counting Miracles </p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title="vampires of el norte" onclick="showContent('vampires of el norte', 'Now you are reading vampires of el norte.')">
+            <img src="https://images2.penguinrandomhouse.com/cover/9780593436738" alt="Trending Book 3">
+            <p>vampires of el norte</p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title="The love of my after life" onclick="showContent('The love of my after life', 'Now you are reading The love of my after life.')">
+            <img src="https://images4.penguinrandomhouse.com/cover/9780593816134" alt="Trending Book 4">
+            <p>The love of my after life</p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title="There's always this year " onclick="showContent('There's always this year ', 'Now you are reading There's always this year.')">
+            <img src="https://images1.penguinrandomhouse.com/cover/9780593448793" alt="Trending Book 5">
+            <p>There's always this year </p>
+            <button>Read</button>
+        </div>
+    </section>
+
+    <!-- Classic Books Section -->
+    <div class="section-title">Classic Books</div>
+    <section class="book-section">
+        <div class="book" data-title="Women in power " onclick="showContent('Women in power', 'Women in power is available to Borrow .')">
+            <img src="https://images2.penguinrandomhouse.com/cover/9780143136361" alt="Classic Book 1">
+            <p>Women in power</p>
+            <button>Borrow</button>
+        </div>
+        <div class="book" data-title="Men of Maize " onclick="showContent('Men of Maize ', 'Men of Maize is not available right now.')">
+            <img src="https://images.penguinrandomhouse.com/cover/9780143138402" alt="Men of Maize ">
+            <p>Classic Title 2</p>
+            <button>Borrowed</button>
+        </div>
+        <div class="book" data-title="DOGEATERS" onclick="showContent('DOGEATERS', ' You can borrow DOGEATERS.')">
+            <img src="https://images.penguinrandomhouse.com/cover/9780143138167" alt="Classic Book 3">
+            <p>DOGEATERS</p>
+            <button>Borrow</button>
+        </div>
+        <div class="book" data-title="Childish Literature " onclick="showContent('Childish Literature', 'Childish Literature is available to read.')">
+            <img src="https://images.penguinrandomhouse.com/cover/9780143138082" alt="Classic Book 4">
+            <p>Childish Literature</p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title="Our Nig" onclick="showContent('Our Nig', 'You can borrow Our Nig.')">
+            <img src="https://images.penguinrandomhouse.com/cover/9780307477453" alt="Classic Title 5">
+            <p>Our Nig</p>
+            <button>Borrow</button>
+        </div>
+    </section>
+
+    <!-- Books We Love Section -->
+    <div class="section-title">Books We Love</div>
+    <section class="book-section">
+        <div class="book" data-title="Tell me everything " onclick="showContent('Tell me everything ', 'Now you are reading Tell me everything .')">
+            <img src="https://images2.penguinrandomhouse.com/cover/9780593446096" alt="Book We Love 1">
+            <p>Tell me everything </p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title="Make it easy " onclick="showContent('Make it easy', 'You are reading Make it easy.')">
+            <img src="https://images3.penguinrandomhouse.com/cover/9781984863096" alt="Book We Love 2">
+            <p>Make it easy</p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title="Impossible creatures" onclick="showContent(' Impossible creatures', 'Impossible creatures is not available .')">
+            <img src="https://images3.penguinrandomhouse.com/cover/9780593809860" alt="Book We Love 3">
+            <p>Impossible creatures</p>
+            <button>Not available </button>
+        </div>
+        <div class="book" data-title=" Good night thoughts " onclick="showContent('Good night thoughts', 'Reading Good night thoughts.')">
+            <img src="https://images3.penguinrandomhouse.com/cover/9780593697894" alt="Book We Love 4">
+            <p>Good night thoughts</p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title="Love trainliangle " onclick="showContent('Love trainliangle', 'Now you are reading Love trainliangle .')">
+            <img src="https://images2.penguinrandomhouse.com/cover/9780593418109" alt="Book We Love 5">
+            <p>Love trainliangle</p>
+            <button>Read</button>
+        </div>
+    </section>
+
+    <!-- Kids Books Section -->
+    <div class="section-title">Kids Books</div>
+    <section class="book-section">
+        <div class="book" data-title="The swifts" onclick="showContent('The swifts', 'Now you are reading The swifts.')">
+            <img src="https://images3.penguinrandomhouse.com/cover/9780593533260" alt="Kids Book 1">
+            <p>The swifts</p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title=" Narwal sweet too" onclick="showContent('Narwal sweet too', 'Narwal sweet too is not available.')">
+            <img src="https://images4.penguinrandomhouse.com/cover/9781774884485" alt="Kids Book 2">
+            <p>Narwal sweet too</p>
+            <button>Not available </button>
+        </div>
+        <div class="book" data-title="Bluey" onclick="showContent('Bluey', 'Reading Bluey .')">
+            <img src="https://images3.penguinrandomhouse.com/cover/9780593752531" alt ="Kids Book 3">
+            <p>Bluey</p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title="The truth about the couch " onclick="showContent('The truth about the couch ', 'This is the content of The truth about the couch.')">
+            <img src="https://images3.penguinrandomhouse.com/cover/9780593619131" alt="Kids Book 4">
+            <p>The truth about the couch </p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title="Just one more sleep " onclick="showContent('Just one more sleep ', 'This is the content of Just one more sleep .')">
+            <img src="https://images3.penguinrandomhouse.com/cover/9780593527047" alt="Kids Book 5">
+            <p>Just one more sleep </p>
+            <button>Read</button>
+        </div>
+    </section>
+
+    <!-- Thrillers Section -->
+    <div class="section-title">Thrillers</div>
+    <section class="book-section">
+        <div class="book" data-title="Advice to murders " onclick="showContent('Advice to murders ', 'This is the content of Advice to murders .')">
+            <img src="https://images4.penguinrandomhouse.com/cover/9780593549223?height=284&alt=cover_coming_soon.jpg" alt="Thriller 1">
+            <p>Advice to murders </p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title="The Martin" onclick="showContent('The Martin', 'This is the content of The Martin.')">
+            <img src="https://images1.penguinrandomhouse.com/cover/9780553418026?height=284&alt=cover_coming_soon.jpg" alt="Thriller 2">
+            <p>The Martin</p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title="The hitchcock hotel" onclick="showContent('The hitchcock hotel ', 'This is the content of The hitchcock hotel.')">
+            <img src="https://images2.penguinrandomhouse.com/cover/9780593547113?height=284&alt=cover_coming_soon.jpg" alt="Thriller 3">
+            <p>The hitchcock hotel</p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title="Blood sisters " onclick="showContent('Blood sisters', ' Blood sisters is not available .')">
+            <img src="https://images2.penguinrandomhouse.com/cover/9780593550137?height=284&alt=cover_coming_soon.jpg" alt="Thriller 4">
+            <p>Blood sisters</p>
+            <button>Borrowed</button>
+        </div>
+        <div class="book" data-title="Vertical run " onclick="showContent('Vertical run', 'This is the content of Vertical run.')">
+            <img src="https://images2.penguinrandomhouse.com/cover/9780553750805?height=284&alt=cover_coming_soon.jpg" alt="Thriller 5">
+            <p>Vertical run</p>
+            <button>Read</button>
+        </div>
+    </section>
+
+    <!-- Fictional  Section -->
+    <div class="section-title">Fiction</div>
+    <section class="book-section">
+        <div class="book" data-title="mademoiselle revolution " onclick="showContent('mademoiselle revolution  1
+', 'This is the content of mademoiselle revolution.')">
+            <img src="https://images3.penguinrandomhouse.com/cover/9780593336045" alt="Textbook 1">
+            <p>mademoiselle revolution</p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title="River sing me home" onclick="showContent('River sing me home ', 'River sing me home not available .')">
+            <img src="https://images1.penguinrandomhouse.com/cover/9780593548066" alt="Textbook 2">
+            <p>River sing me home</p>
+            <button>Not available </button>
+        </div>
+        <div class="book" data-title="Personal librarian " onclick="showContent('Personal librarian', 'Now you are reading Personal librarian .')">
+            <img src="https://images2.penguinrandomhouse.com/cover/9780593101544" alt="Textbook 3">
+            <p>Personal librarian</p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title="Take my hand " onclick="showContent('Take my hand', 'Reading Take my hand.')">
+            <img src="https://images2.penguinrandomhouse.com/cover/9780593337714" alt="Textbook 4">
+            <p>Take my hand</p>
+            <button>Read</button>
+        </div>
+        <div class="book" data-title="Zadie smith on beauty " onclick="showContent('Zadie smith on beauty', 'Zadie smith on beauty not in library .')">
+            <img src="https://images1.penguinrandomhouse.com/cover/9780143037743" alt="Textbook 5">
+            <p>Zadie smith on beauty</p>
+            <button>Borrowed</button>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <div class="footer">
+        <div class="stats">
+            <div class="stat-box">
+                <h3> </h3>
+                <p>Unique Visitors</p>
+            </div>
+            <div class="stat-box">
+                <h3> </h3>
+                <p>New Members</p>
+            </div>
+            <div class="stat-box">
+                <h3> </h3>
+                <p>Catalog Edits</p>
+            </div>
+            <div class="stat-box">
+                <h3> </h3>
+                <p>Ebooks Borrowed</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to open login modal
+        document.getElementById('loginBtn').onclick = function() {
+            document.getElementById('loginModal').style.display = "block";
+        }
+
+        // Function to close login modal
+        function closeModal() {
+            document.getElementById('loginModal').style.display = "none";
+        }
+
+        // Function to show book content
+        function showContent(title, content) {
+            alert(`You are reading: ${title}\n${content}`);
+        }
+
+        // Function to search books
+        function searchBooks() {
+            let searchInput = document.getElementById('searchInput').value.toLowerCase();
+            let books = document.querySelectorAll('.book');
+
+            books.forEach((book) => {
+                let bookTitle = book.getAttribute('data-title').toLowerCase();
+
+                if (bookTitle.includes(searchInput)) {
+                    book.style.display = 'block';
+                } else {
+                    book.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
